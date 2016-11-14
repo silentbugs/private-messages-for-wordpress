@@ -120,13 +120,16 @@ function rwpm_adminbar()
 	// get number of unread messages
 	$num_unread = (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $wpdb->prefix . 'pm WHERE `recipient` = "' . $current_user->user_login . '" AND `read` = 0 AND `deleted` != "2"' );
 
-	if ( $num_unread && is_admin_bar_showing() )
+	if ( is_admin_bar_showing() )
 	{
 		$wp_admin_bar->add_menu( array(
 			'id'    => 'rwpm',
-			'title' => sprintf( _n( 'You have %d new message!', 'You have %d new messages!', $num_unread, 'pm4wp' ), $num_unread ),
+			'title' => sprintf( _n( '<span class="ab-icon"></span><span>%d</span>', '<span class="ab-icon"></span><span>%d</span>', $num_unread, 'pm4wp' ), $num_unread ),
 			'href'  => admin_url( 'admin.php?page=rwpm_inbox' ),
-			'meta'  => array( 'class' => "rwpm_newmessages" ),
+			'meta'  => array(
+				'class' => "rwpm_newmessages",
+				'title' => sprintf( _n( 'You have %d new Private Message!', 'You have %d new Private Messages!', $num_unread, 'pm4wp' ), $num_unread ),
+			),
 		) );
 	}
 }
