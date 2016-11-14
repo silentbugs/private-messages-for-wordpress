@@ -13,11 +13,11 @@ class Pm4wp_Widget extends WP_Widget
 	/**
 	 * Constructor
 	 */
-	function Pm4wp_Widget()
+	function __construct()
 	{
 		$widget_options = array( 'description' => __( 'Show notifications and new private messages on sidebar', 'pm4wp' ) );
 		$control_options = array();
-		parent::WP_Widget( 'pm4wp-widget', __( 'Private Messages Widget', 'pm4wp' ), $widget_options, $control_options );
+		parent::__construct( 'pm4wp-widget', __( 'Private Messages Widget', 'pm4wp' ), $widget_options, $control_options );
 	}
 
 	/**
