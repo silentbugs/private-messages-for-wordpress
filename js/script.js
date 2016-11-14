@@ -23,7 +23,7 @@ jQuery( document ).ready( function ( $ )
 		return split( term ).pop();
 	}
 
-	$( '#recipient' ).autocomplete( {
+	$( '#acrecipient' ).autocomplete( {
 		source: function ( request, response )
 		{
 			var data = {

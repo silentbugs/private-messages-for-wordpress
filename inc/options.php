@@ -141,10 +141,20 @@ function rwpm_option_page() {
 				<tr>
 					<th><?php _e( 'How do you want to choose recipient?', 'pm4wp' ); ?></th>
 					<td>
+					<ul>
+					<li>
 						<input type="radio" name="rwpm_option[type]" value="dropdown" <?php if ( $option['type'] == 'dropdown' )
 							echo 'checked="checked"'; ?> /><?php _e( 'Dropdown list', 'pm4wp' ); ?>
+					</li>
+					<li>
 						<input type="radio" name="rwpm_option[type]" value="autosuggest" <?php if ( $option['type'] == 'autosuggest' )
 							echo 'checked="checked"'; ?> /><?php _e( 'Auto suggest from user input', 'pm4wp' ); ?>
+					</li>
+					<li>
+						<input type="radio" name="rwpm_option[type]" value="off" <?php if ( $option['type'] == 'off' )
+							echo 'checked="checked"'; ?> /><?php _e( 'Disabled (manual entry)', 'pm4wp' ); ?>
+					</li>
+					</ul>
 					</td>
 				</tr>
 			</table>

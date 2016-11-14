@@ -28,7 +28,7 @@ function rwpm_send()
 		// Get input fields with no html tags and all are escaped
 		$subject = strip_tags( $_POST['subject'] );
 		$content = $_POST['content'] ;
-		$recipient = $option['type'] == 'autosuggest' ? explode( ',', $_POST['recipient'] ) : $_POST['recipient'];
+		$recipient = $option['type'] == 'autosuggest' || $option['type'] == 'off' ? explode( ',', $_POST['recipient'] ) : $_POST['recipient'];
 		$recipient = array_map( 'strip_tags', $recipient );
 
 		// Allow to filter content
@@ -53,6 +53,17 @@ function rwpm_send()
 		{
 			$error = true;
 			$status[] = __( 'Please enter username of recipient.', 'pm4wp' );
+		} else {
+			// verify recipients
+			foreach ( $recipient as $rec )
+			{
+				$rec_exists = username_exists($rec);
+				if (!$rec_exists)
+				{
+					$error = true;
+					$status[] = __( 'The username \'' . $rec . '\' does not exist. Please try again.', 'pm4wp' );
+				}
+			}
 		}
 		if ( empty( $subject ) )
 		{
@@ -71,7 +82,7 @@ function rwpm_send()
 			foreach ( $recipient as $rec )
 			{
 				// get user_login field
-				$rec = $wpdb->get_var( "SELECT user_login FROM $wpdb->users WHERE display_name = '$rec' LIMIT 1" );
+				$rec = $wpdb->get_var( "SELECT user_login FROM $wpdb->users WHERE user_login = '$rec' LIMIT 1" );
 				$new_message = array(
 					'id'        => NULL,
 					'subject'   => $subject,
@@ -91,7 +102,7 @@ function rwpm_send()
 					// send email to user
 					if ( $option['email_enable'] )
 					{
-						$sender = $wpdb->get_var( "SELECT display_name FROM $wpdb->users WHERE user_login = '$sender' LIMIT 1" );
+						$sender = $wpdb->get_var( "SELECT user_login FROM $wpdb->users WHERE user_login = '$sender' LIMIT 1" );
 
 						// replace tags with values
 						$tags = array( '%BLOG_NAME%', '%BLOG_ADDRESS%', '%SENDER%', '%INBOX_URL%' );
@@ -117,7 +128,7 @@ function rwpm_send()
 						}
 						$email_body = nl2br( $email_body );
 
-						$recipient_email = $wpdb->get_var( "SELECT user_email from $wpdb->users WHERE display_name = '$rec'" );
+						$recipient_email = $wpdb->get_var( "SELECT user_email from $wpdb->users WHERE user_login = '$rec'" );
 						$mailtext = "<html><head><title>$email_subject</title></head><body>$email_body</body></html>";
 
 						// set headers to send html email
@@ -180,16 +191,16 @@ function rwpm_send()
 					if ( $option['type'] == 'autosuggest' )
 					{
 						?>
-                        <input id="recipient" type="text" value="<?php echo $recipient; ?>" name="recipient" placeholder="Enter recipient's name" class="large-text" />
+                        <input id="acrecipient" type="text" value="<?php echo $recipient; ?>" name="recipient" placeholder="Enter recipient's name" class="large-text" />
 						<?php
 
 					}
-					else // classic way: select recipient from dropdown list
+					else if ( $option['type'] == 'dropdown') // classic way: select recipient from dropdown list
 					{
 						// Get all users of blog
 						$args = array(
 							'order'   => 'ASC',
-							'orderby' => 'display_name' );
+							'orderby' => 'user_login' );
 						$values = get_users( $args );
 						$values = apply_filters( 'rwpm_recipients', $values );
 						?>
@@ -197,11 +208,15 @@ function rwpm_send()
 							<?php
 							foreach ( $values as $value )
 							{
-								$selected = ( $value->display_name == $recipient ) ? ' selected="selected"' : '';
-								echo "<option value='$value->display_name'$selected>$value->display_name</option>";
+								$selected = ( $value->user_login == $recipient ) ? ' selected="selected"' : '';
+								echo "<option value='$value->user_login'$selected>$value->user_login</option>";
 							}
 							?>
 						</select>
+						<?php
+					} else if ( $option['type'] == 'off') {
+						?>
+						<input id="recipient" type="text" value="<?php echo $recipient; ?>" name="recipient" placeholder="Enter recipient's name" class="large-text" />
 						<?php
 					}
 					?>

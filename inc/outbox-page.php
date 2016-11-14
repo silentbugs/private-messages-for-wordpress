@@ -14,7 +14,7 @@ function rwpm_outbox()
 
         // select message information
         $msg = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'pm WHERE `id` = "' . $id . '" LIMIT 1');
-        $msg->recipient = $wpdb->get_var("SELECT display_name FROM $wpdb->users WHERE user_login = '$msg->recipient'");
+        $msg->recipient = $wpdb->get_var("SELECT user_login FROM $wpdb->users WHERE user_login = '$msg->recipient'");
         ?>
     <div class="wrap">
         <h2><?php _e('Outbox \ View Message', 'pm4wp'); ?></h2>
@@ -33,10 +33,10 @@ function rwpm_outbox()
                 <td><?php printf(__('<b>Recipient</b>: %s<br /><b>Date</b>: %s', 'pm4wp'), $msg->recipient, $msg->date); ?></td>
                 <td><?php printf(__('<p><b>Subject</b>: %s</p><p>%s</p>', 'pm4wp'), stripcslashes($msg->subject), nl2br(stripcslashes($msg->content))); ?></td>
                 <td>
-						<span class="delete">
-							<a class="delete"
+                        <span class="delete">
+                            <a class="delete"
                                href="<?php echo wp_nonce_url("?page=rwpm_outbox&action=delete&id=$msg->id", 'rwpm-delete_outbox_msg_' . $msg->id); ?>"><?php _e('Delete', 'pm4wp'); ?></a>
-						</span>
+                        </span>
                 </td>
             </tr>
             </tbody>
@@ -121,7 +121,7 @@ function rwpm_outbox()
                 <tbody>
                     <?php
                     foreach ($msgs as $msg) {
-                        $msg->recipient = $wpdb->get_var("SELECT display_name FROM $wpdb->users WHERE user_login = '$msg->recipient'");
+                        $msg->recipient = $wpdb->get_var("SELECT user_login FROM $wpdb->users WHERE user_login = '$msg->recipient'");
                         ?>
                     <tr>
                         <th class="check-column"><input type="checkbox" name="id[]" value="<?php echo $msg->id; ?>"/>
@@ -132,13 +132,13 @@ function rwpm_outbox()
                             echo '<a href="', wp_nonce_url("?page=rwpm_outbox&action=view&id=$msg->id", 'rwpm-view_outbox_msg_' . $msg->id), '">', stripcslashes($msg->subject), '</a>';
                             ?>
                             <div class="row-actions">
-							<span>
-								<a href="<?php echo wp_nonce_url("?page=rwpm_outbox&action=view&id=$msg->id", 'rwpm-view_outbox_msg_' . $msg->id); ?>"><?php _e('View', 'pm4wp'); ?></a>
-							</span>
-							<span class="delete">
-								| <a class="delete"
+                            <span>
+                                <a href="<?php echo wp_nonce_url("?page=rwpm_outbox&action=view&id=$msg->id", 'rwpm-view_outbox_msg_' . $msg->id); ?>"><?php _e('View', 'pm4wp'); ?></a>
+                            </span>
+                            <span class="delete">
+                                | <a class="delete"
                                      href="<?php echo wp_nonce_url("?page=rwpm_outbox&action=delete&id=$msg->id", 'rwpm-delete_outbox_msg_' . $msg->id); ?>"><?php _e('Delete', 'pm4wp'); ?></a>
-							</span>
+                            </span>
                             </div>
                         </td>
                         <td><?php echo $msg->date; ?></td>

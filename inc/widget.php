@@ -66,7 +66,7 @@ class Pm4wp_Widget extends WP_Widget
 				echo '<ol>';
 				foreach ( $msgs as $msg )
 				{
-					$msg->sender = $wpdb->get_var( "SELECT display_name FROM $wpdb->users WHERE user_login = '$msg->sender'" );
+					$msg->sender = $wpdb->get_var( "SELECT user_login FROM $wpdb->users WHERE user_login = '$msg->sender'" );
 					echo '<li>';
 					if ( !$msg->read )
 					{

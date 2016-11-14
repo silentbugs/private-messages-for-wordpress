@@ -139,18 +139,24 @@ function rwpm_adminbar()
  */
 function rwpm_get_users()
 {
-	$keyword = trim( strip_tags( $_POST['term'] ) );
-	$values = array();
-	$args = array( 'search' => '*' . $keyword . '*',
-	               'fields' => 'all_with_meta' );
-	$results_search_users = get_users( $args );
-	$results_search_users = apply_filters( 'rwpm_recipients', $results_search_users );
-	if ( !empty( $results_search_users ) )
-	{
-		foreach ( $results_search_users as $result )
+	$option = get_option( 'rwpm_option' );
+
+	if ($option['type'] == 'autosuggest') {
+		$keyword = trim( strip_tags( $_POST['term'] ) );
+		$values = array();
+		$args = array( 'search' => '*' . $keyword . '*',
+		               'fields' => 'all_with_meta' );
+		$results_search_users = get_users( $args );
+		$results_search_users = apply_filters( 'rwpm_recipients', $results_search_users );
+		if ( !empty( $results_search_users ) )
 		{
-			$values[] = $result->display_name;
+			foreach ( $results_search_users as $result )
+			{
+				$values[] = $result->user_login;
+			}
 		}
+		die( json_encode( $values ) );
+	} else {
+		die( json_encode( array() ) );
 	}
-	die( json_encode( $values ) );
 }

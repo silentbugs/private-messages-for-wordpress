@@ -18,7 +18,7 @@ function rwpm_inbox()
 
 		// select message information
 		$msg = $wpdb->get_row( 'SELECT * FROM ' . $wpdb->prefix . 'pm WHERE `id` = "' . $id . '" LIMIT 1' );
-		$msg->sender = $wpdb->get_var( "SELECT display_name FROM $wpdb->users WHERE user_login = '$msg->sender'" );
+		$msg->sender = $wpdb->get_var( "SELECT user_login FROM $wpdb->users WHERE user_login = '$msg->sender'" );
 		?>
 	<div class="wrap">
 		<h2><?php _e( 'Inbox \ View Message', 'pm4wp' ); ?></h2>
@@ -186,7 +186,7 @@ function rwpm_inbox()
 					<?php
 					foreach ( $msgs as $msg )
 					{
-						$msg->sender = $wpdb->get_var( "SELECT display_name FROM $wpdb->users WHERE user_login = '$msg->sender'" );
+						$msg->sender = $wpdb->get_var( "SELECT user_login FROM $wpdb->users WHERE user_login = '$msg->sender'" );
 						?>
 					<tr>
 						<th class="check-column"><input type="checkbox" name="id[]" value="<?php echo $msg->id; ?>" />
