@@ -33,7 +33,7 @@ function rwpm_send()
 
 		// Allow to filter content
 		$content = apply_filters( 'rwpm_content_send', $content );
-		
+
 		// Remove slash automatically in wp
 		$subject = stripslashes( $subject );
 		$content = stripslashes( $content );
@@ -47,7 +47,7 @@ function rwpm_send()
 		// Remove duplicate and empty recipient
 		$recipient = array_unique( $recipient );
 		$recipient = array_filter( $recipient );
-		
+
 		// Check input fields
 		if ( empty( $recipient ) )
 		{
@@ -170,15 +170,17 @@ function rwpm_send()
 
 						$content = '<p>&nbsp;</p>';
 						$content .= '<p>---</p>';
-						$content .= '<p><em>' . __( 'In: ', 'pm4wp' ) . $msg->date . "\t" . $msg->sender . __( ' Wrote:', 'pm4wp' ) . '</em></p>';
+						$content .= '<p><em>' . __( 'On: ', 'pm4wp' ) . $msg->date . "\t" . $msg->sender . __( ' Wrote:', 'pm4wp' ) . '</em></p>';
 						$content .= wpautop( $msg->content );
-						$content  = stripslashes( $content );
+						// hack to replace new lines with HTML breaks
+						$content = str_replace("\\r\\n","<br \>", $content);
+						$content = stripslashes( $content );
 					}
 					// if auto suggest feature is turned on
 					if ( $option['type'] == 'autosuggest' )
 					{
 						?>
-                        <input id="recipient" type="text" name="recipient" class="large-text" />
+                        <input id="recipient" type="text" value="<?php echo $recipient; ?>" name="recipient" placeholder="Enter recipient's name" class="large-text" />
 						<?php
 
 					}
