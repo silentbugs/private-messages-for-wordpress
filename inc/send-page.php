@@ -61,7 +61,7 @@ function rwpm_send()
 				if (!$rec_exists)
 				{
 					$error = true;
-					$status[] = __( 'The username \'' . $rec . '\' does not exist. Please try again.', 'pm4wp' );
+					$status[] = __( 'The user \'' . $rec . '\' does not exist. Please try again.', 'pm4wp' );
 				}
 			}
 		}
